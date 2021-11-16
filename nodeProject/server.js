@@ -1,15 +1,22 @@
 const express=require('express');
 const mongoose = require('mongoose');
-//引入users.js
-const users=require('./routes/api/users');
-
-//引入資料庫地址
-const db=require('./config/keys').mongoURI;
 const app=express();
 const port=process.env.PORT || 3000;
+//引入users.js
+const users=require('./routes/api/users');
+//引入資料庫地址
+const db=require('./config/keys').mongoURI;
+
+
+//使用body-parser中間件
+app.use(express.urlencoded({extended:false}));
+
+app.use(express.json());
 
 
 
+
+//連結資料庫
 mongoose.connect(db, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
@@ -25,7 +32,9 @@ app.get('/',((req,res)=>{
 app.use("/api/users",users);
 
 
-
+//監聽伺服器
 app.listen(port,()=>{
     console.log(`server run port:${port}`);
 });
+
+
