@@ -1,6 +1,7 @@
 const express=require("express");
 const User=require('../../models/User');
 const bcrypt=require("bcrypt");
+const gravatar=require('gravatar');
 const router=express.Router();
 
 
@@ -18,9 +19,11 @@ router.post('/register',((req,res)=>{
             if(user){
                 return res.status(400).json({email:"已經有人註冊過!"})
             }else{
+                const avatar=gravatar.url(req.body.email,{ s : '200' ,  r : 'pg' ,  d : 'mm' }); 
                 const newUser=new User({
                     name:req.body.name,
                     email:req.body.email,
+                    avatar,
                     password:req.body.password,
                 })
                 bcrypt.genSalt(10,function(err,salt){ 
