@@ -5,6 +5,8 @@ const app=express();
 const port=process.env.PORT || 3000;
 //引入users.js
 const users=require('./routes/api/users');
+//引入profile.js
+const profiles=require('./routes/api/profiles');
 //引入資料庫地址
 const db=require('./config/keys').mongoURI;
 
@@ -29,6 +31,7 @@ require("./config/passport")(passport);
 
 //使用routes
 app.use("/api/users",users);
+app.use("/api/profiles",profiles);
 
 
 //監聽伺服器

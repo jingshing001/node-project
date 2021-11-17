@@ -9,18 +9,13 @@ const router=express.Router();
 
 
 
-//路由測試
-router.get("/test",(req,res)=>{
-    res.json({msg:"login works"});
-})
-
 //註冊路由
 router.post('/register',((req,res)=>{
     console.log(req.body);
     User.findOne({email:req.body.email})
         .then((user)=>{
             if(user){
-                return res.status(400).json({email:"已經有人註冊過!"})
+                return res.status(400).json("電子信箱已經有人註冊過!")
             }else{
                 const avatar=gravatar.url(req.body.email,{ s : '200' ,  r : 'pg' ,  d : 'mm' }); 
                 const newUser=new User({
@@ -28,6 +23,7 @@ router.post('/register',((req,res)=>{
                     email:req.body.email,
                     avatar,
                     password:req.body.password,
+                    identity:req.body.identity
                 })
                 bcrypt.genSalt(10,function(err,salt){ 
                     bcrypt.hash(newUser.password,salt,(err,hash)=>{ 
@@ -53,14 +49,19 @@ router.post('/login',(req,res)=>{
     User.findOne({email})
         .then((user)=>{
             if(!user){
-                return res.status(404).json({email:'用戶不存在!'})
+                return res.status(404).json('用戶不存在!')
             }
 
             //密碼配對
             bcrypt.compare(password,user.password)
                   .then(isMatch=>{
                       if(isMatch){
-                        const rule={id:user.id,name:user.name}
+                        const rule={
+                            id:user.id,
+                            name:user.name,
+                            avatar:user.avatar,
+                            identity:user.identity
+                        }
                         jwt.sign(rule,keys.secretOrkey,{expiresIn:3600},(err,token)=>{
                             if(err)throw err;
                             res.json({
@@ -82,7 +83,8 @@ router.get('/current',passport.authenticate("jwt",{session:false}),(req,res)=>{
     res.json({
         id:req.user.id,
         name:req.user.name,
-        email:req.user.email
+        email:req.user.email,
+        identity:req.user.identity
     });
 })
 
