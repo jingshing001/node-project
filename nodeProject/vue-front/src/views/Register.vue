@@ -13,8 +13,8 @@
                          <el-form-item label="密碼" prop="password">
                             <el-input type="password" v-model="registerUser.password" placeholder="請輸入密碼"></el-input>
                         </el-form-item>
-                         <el-form-item label="用戶名" prop="name">
-                            <el-input type="password" v-model="registerUser.passeord2" placeholder="請確認密碼"></el-input>
+                         <el-form-item label="密碼確認" prop="password2">
+                            <el-input type="password" v-model="registerUser.password2" placeholder="請確認密碼"></el-input>
                         </el-form-item>
                          <el-form-item label="選擇身分" prop="name">
                              <el-select v-model="registerUser.identity" placeholder="請選擇身分"> 
@@ -37,6 +37,14 @@ export default {
     name:'register',
     components:{},
     data(){
+       var validatePass2 = (rule, value, callback) => {
+           if (value !== this.registerUser.password) {
+             callback(new Error('兩次輸入密碼不一致!'));
+           } else {
+             callback();
+           }
+      };
+    
         return {
             registerUser:{
                 name:'',
@@ -44,7 +52,66 @@ export default {
                 password:'',
                 password2:"",
                 identity:''
+            },
+            rules:{
+                name:[
+                    {
+                        required:true,
+                        message:'用戶名不能為空',
+                        trigger:'blur'
+                    },
+                    {    
+                        min:2,
+                        max:30,
+                        message:'長度在2到30個字符之間',
+                        trigger:'blur'
+                    }
+                    ],
+                email:[
+                    {
+                        type:"email",
+                        required:true,
+                        message:"電子信箱格式不正確",
+                        trigger:'blur'
+                    }
+                    ],
+                password:[
+                    {
+                        required:true,
+                        message:'密碼不能為空',
+                        trigger:'blur'
+                    },
+                    {
+                        min:6,
+                        max:30,
+                        message:'長度在6到30之間',
+                        trigger:'blur'
+                    }
+                    ],
+                password2:[
+                      {
+                        required:true,
+                        message:'確認密碼不能為空',
+                        trigger:'blur'
+                    },
+                    {
+                        min:6,
+                        max:30,
+                        message:'長度在6到30之間',
+                        trigger:'blur'
+                    },
+                    {
+                        validator:validatePass2,
+                        trigger:'blur'
+                    }
+                ],
             }
+        }
+    },
+    methods:{
+        submitForm(formName){
+            console.dir(this.$refs[formName])
+         
         }
     }
 }
