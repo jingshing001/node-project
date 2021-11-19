@@ -18,6 +18,7 @@ mongoose.connect(db, {
         console.log("MONGODB CONNECTED");
   }).catch(err=>console.log(err));
 
+
 //使用body-parser中間件
 app.use(express.urlencoded({extended:false}));
 

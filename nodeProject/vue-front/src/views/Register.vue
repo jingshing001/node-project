@@ -110,7 +110,19 @@ export default {
     },
     methods:{
         submitForm(formName){
-            console.dir(this.$refs[formName])
+        this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.$axios.post("/api/users/register",this.registerUser)
+                    .then(res=>{
+                        //註冊成功
+                        this.$message({
+                            message:'帳號註冊成功',
+                            type:"success"
+                        })
+                    })
+                 this.$router.push('/login');
+             }
+        });
          
         }
     }
