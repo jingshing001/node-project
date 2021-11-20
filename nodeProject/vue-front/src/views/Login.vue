@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode'
 export default {
     name:'login',
     components:{},
@@ -66,7 +67,12 @@ export default {
                     //console.log(res);
                     //token
                     const { token }=res.data;
+                
                     localStorage.setItem('tokenId',token);
+                    //解析token
+                    const decoded=jwt_decode(token);
+                    console.log(decoded);
+
                     this.$router.push('/index');
                     })
                  

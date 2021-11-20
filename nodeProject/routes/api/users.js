@@ -62,7 +62,7 @@ router.post('/login',(req,res)=>{
                             avatar:user.avatar,
                             identity:user.identity
                         }
-                        jwt.sign(rule,keys.secretOrkey,{expiresIn:3600},(err,token)=>{
+                        jwt.sign(rule,keys.secretOrkey,{expiresIn:10},(err,token)=>{
                             if(err)throw err;
                             res.json({
                                 success:true,

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message,Loading } from 'element-ui';
+import router from './router';
 
 let loading;
 
@@ -19,6 +20,12 @@ function endLoading(){
 axios.interceptors.request.use(config =>{
     //加載動畫
     startLoading();
+    console.log(config);
+
+    if(localStorage.getItem('tokenId')){
+        config.headers.Authorization=localStorage.getItem('tokenId')
+    }
+
     return config;
 },error=>{
     return Promise.reject(error);
@@ -32,6 +39,16 @@ axios.interceptors.response.use(response =>{
 },error=>{
     endLoading();
     Message.error(error.response.data);
+    //錯誤代碼
+    const {status}=error.response;
+        if(status==401){
+            Message.error('token失效,請重新登入!');
+            //清除tokenId
+            localStorage.removeItem('tokenId');
+            //跳轉到登入頁面
+            router.push('/login');
+        }
+
     return Promise.reject(error);
 })
 
