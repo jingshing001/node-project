@@ -71,15 +71,29 @@ export default {
                     localStorage.setItem('tokenId',token);
                     //解析token
                     const decoded=jwt_decode(token);
-                    console.log(decoded);
+                    // console.log(decoded);
+
+                    //token存儲到vuex中
+                    this.$store.dispatch("setAuthenticated",!this.isEmpty(decoded));
+                    this.$store.dispatch("setUser",decoded);
 
                     this.$router.push('/index');
+                    }).catch(()=>{
+                        console.log('密碼或使用者輸入錯誤')
                     })
                  
              }
         });
-         
+        },
+        isEmpty(value){
+            return(
+                value === undefined||
+                value === null ||
+                (typeof value === "object" && Object.keys(value).length === 0)||
+                (typeof value === "string" && value.trim().length === 0)
+            )
         }
+         
     }
 }
 </script>
